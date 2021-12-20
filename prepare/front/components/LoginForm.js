@@ -1,7 +1,9 @@
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
+import propTypes from "prop-types";
 import { useCallback, useState, useMemo } from "react";
 import styled from "styled-components";
+import useInput from "../hooks/useinput";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -12,21 +14,8 @@ const FormWrapper = styled(Form)`
 `;
 
 const LoginForm = ({ setIsLoggedIn }) => {
-  const [id, setId] = useState("");
-  const [password, setPassword] = useState("");
-
-  //스타일 태그 내에 객체로써 스타일 정의시에는 리렌더링 유발한다.
-  // {} === {} -> false 이기 때문
-  // useMemo를 사용 or css-in-js 방식으로 스타일링 할 것
-  // const style = useMemo(() => ({ marginTop: 10 }), []);
-
-  const onChangeId = useCallback((e) => {
-    setId(e.target.value);
-  }, []);
-
-  const onChangePassword = useCallback((e) => {
-    setPassword(e.target.value);
-  }, []);
+  const [id, onChangeId] = useInput("");
+  const [password, onChangePassword] = useInput("");
 
   const onSubmitForm = useCallback(() => {
     console.log(id, password);
@@ -63,6 +52,10 @@ const LoginForm = ({ setIsLoggedIn }) => {
       <div></div>
     </FormWrapper>
   );
+};
+
+LoginForm.propTypes = {
+  setIsLoggedIn: propTypes.func.isRequired,
 };
 
 export default LoginForm;
