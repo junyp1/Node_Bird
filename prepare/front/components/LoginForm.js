@@ -1,17 +1,22 @@
 import { Form, Input, Button } from "antd";
 import Link from "next/link";
 import { useCallback, useState } from "react";
+import styled from "styled-components";
+
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+`;
 
 const LoginForm = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const onChangeId = useCallback((e) => {
-    setId(e.target);
+    setId(e.target.value);
   }, []);
 
   const onChangePassword = useCallback((e) => {
-    setPassword(e.target);
+    setPassword(e.target.value);
   }, []);
 
   return (
@@ -31,7 +36,7 @@ const LoginForm = () => {
           required
         ></Input>
       </div>
-      <div>
+      <div style={{ marginTop: 10 }}>
         <Button type="primary" htmlType="submit" loading={false}>
           로그인
         </Button>
