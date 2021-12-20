@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
+  margin-left: 10px;
 `;
 
 const LoginForm = () => {
