@@ -6,7 +6,7 @@ export const initialState = {
         id: 1,
         nickname: "juny",
       },
-      content: "첫 게시글",
+      content: "첫 게시글 #hashtag #포스트",
       Images: [
         {
           src: "https://pds.joongang.co.kr/news/component/htmlphoto_mmdata/202004/28/121a78f5-eecb-4942-a585-51f32dae2085.jpg",

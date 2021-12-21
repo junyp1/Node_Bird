@@ -22,26 +22,22 @@ const ImagesZoom = ({ images, onClose }) => {
         <CloseBtn onClick={onClose}>X</CloseBtn>
       </Header>
       <SlickWrapper>
-        <div>
-          <Slick
-            initialSlide={0}
-            afterChange={(slide) => setCurrentSlide(slide)}
-            infinite
-            arrows={false}
-            slidesToShow={1}
-            slidesToScroll={1}
-          >
-            {images.map((v) => (
-              <ImgWrapper key={v.src}>
-                <img src={v.src} alt={v.src}></img>
-              </ImgWrapper>
-            ))}
-          </Slick>
-        </div>
+        <Slick
+          initialSlide={0}
+          beforeChange={(slide) => setCurrentSlide(slide)}
+          infinite
+          arrows={false}
+          slidesToShow={1}
+          slidesToScroll={1}
+        >
+          {images.map((v) => (
+            <ImgWrapper key={v.src}>
+              <img src={v.src} alt={v.src}></img>
+            </ImgWrapper>
+          ))}
+        </Slick>
         <Indicator>
-          <div>
-            {currentSlide + 1} /{images.length}
-          </div>
+          {currentSlide + 1} /{images.length}
         </Indicator>
       </SlickWrapper>
     </Overlay>
