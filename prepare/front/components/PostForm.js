@@ -1,23 +1,25 @@
 import { Button, Form, Input } from "antd";
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import useinput from "../hooks/useinput";
 import { addPost } from "../reducers/post";
 
 const PostForm = () => {
   const dispatch = useDispatch();
-  const imageInput = useRef();
-  const { imagePaths } = useSelector((state) => state.post);
-  const [text, setText] = useState("");
+  const { imagePaths, addPostDone } = useSelector((state) => state.post);
+  const [text, onChangeText, setText] = useinput("");
+
+  useEffect(() => {
+    if (addPostDone) {
+      setText("");
+    }
+  }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost);
-    setText("");
-  }, []);
+    dispatch(addPost(text));
+  }, [text]);
 
-  const handleChangeText = useCallback((e) => {
-    setText(e.target.value);
-  }, []);
-
+  const imageInput = useRef();
   const onClickImageUpload = useCallback(() => {
     imageInput.current.click();
   }, [imageInput.current]);
@@ -30,7 +32,7 @@ const PostForm = () => {
     >
       <Input.TextArea
         value={text}
-        onChange={handleChangeText}
+        onChange={onChangeText}
         maxLength={140}
         placeholder="어떤 일이 있었나요?"
       ></Input.TextArea>
