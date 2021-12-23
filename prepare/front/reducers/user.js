@@ -2,16 +2,22 @@ import axios from "axios";
 import produce from "immer";
 
 export const initialState = {
-  logInLoding: false,
+  followLoading: false,
+  followDone: false,
+  followError: null,
+  unfollowLoading: false,
+  unfollowDone: false,
+  unfollowError: null,
+  logInLoading: false,
   logInDone: false,
   logInError: null,
-  logOutLoding: false,
+  logOutLoading: false,
   logOutDone: false,
   logOutError: null,
-  signUpLoding: false,
+  signUpLoading: false,
   signUpDone: false,
   signUpError: null,
-  changeNicknameLoding: false,
+  changeNicknameLoading: false,
   changeNicknameDone: false,
   changeNicknameError: null,
   me: null,
@@ -96,58 +102,88 @@ export const loginAction = (data) => {
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followError = null;
+        draft.followDone = false;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.followDone = true;
+        draft.me.Followings.push({ id: action.data });
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.error;
+        break;
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowError = null;
+        draft.unfollowDone = false;
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.unfollowDone = true;
+        draft.me.Followings = draft.me.Followings.filter(
+          (v) => v.id !== action.data
+        );
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.error;
+        break;
       case LOG_IN_REQUEST:
-        draft.logInLoding = true;
+        draft.logInLoading = true;
         draft.logInError = null;
         draft.logInDone = false;
         break;
       case LOG_IN_SUCCESS:
-        draft.logInLoding = false;
+        draft.logInLoading = false;
         draft.logInDone = true;
         draft.me = dummyUser(action.data);
         break;
       case LOG_IN_FAILURE:
-        draft.logInLoding = false;
+        draft.logInLoading = false;
         draft.logInError = action.error;
         break;
       case LOG_OUT_REQUEST:
-        draft.logOutLoding = true;
+        draft.logOutLoading = true;
         draft.logOutError = null;
         draft.logOutDone = false;
         break;
       case LOG_OUT_SUCCESS:
-        draft.logOutLoding = false;
+        draft.logOutLoading = false;
         draft.logOutDone = true;
         draft.me = null;
         break;
       case LOG_OUT_FAILURE:
-        draft.logOutLoding = false;
+        draft.logOutLoading = false;
         draft.logOutError = action.error;
         break;
       case SIGN_UP_REQUEST:
-        draft.signUpLoding = true;
+        draft.signUpLoading = true;
         draft.signUpError = null;
         draft.signUpDone = false;
         break;
       case SIGN_UP_SUCCESS:
-        draft.signUpLoding = false;
+        draft.signUpLoading = false;
         draft.signUpDone = true;
         break;
       case SIGN_UP_FAILURE:
-        draft.signUpLoding = false;
+        draft.signUpLoading = false;
         draft.signUpError = action.error;
         break;
       case CHANGE_NICKNAME_REQUEST:
-        draft.changeNicknameLoding = true;
+        draft.changeNicknameLoading = true;
         draft.changeNicknameError = null;
         draft.changeNicknameDone = false;
         break;
       case CHANGE_NICKNAME_SUCCESS:
-        draft.changeNicknameLoding = false;
+        draft.changeNicknameLoading = false;
         draft.changeNicknameDone = true;
         break;
       case CHANGE_NICKNAME_FAILURE:
-        draft.changeNicknameLoding = false;
+        draft.changeNicknameLoading = false;
         draft.changeNicknameError = action.error;
         break;
       case ADD_POST_TO_ME:
