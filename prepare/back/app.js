@@ -10,6 +10,7 @@ const db = require("./models");
 const passportConfig = require("./passport");
 const morgan = require("morgan");
 const passport = require("passport");
+const path = require("path");
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use(
   })
 );
 
+app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
