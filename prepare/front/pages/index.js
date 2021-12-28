@@ -10,7 +10,7 @@ const Home = () => {
   const dispatch = useDispatch();
 
   const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePost, loadPostLoading } = useSelector(
+  const { mainPosts, hasMorePost, loadPostLoading, retweetError } = useSelector(
     (state) => state.post
   );
 
@@ -29,14 +29,22 @@ const Home = () => {
   // 스크롤 끝까지 내렸을 때 -> scrollY + clientHeight = scrollHeight
 
   useEffect(() => {
+    if (retweetError) {
+      alert(retweetError);
+    }
+  }, [retweetError]);
+
+  useEffect(() => {
     function onScroll() {
       if (
         parseInt(window.scrollY) + document.documentElement.clientHeight >
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePost && !loadPostLoading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POST_REQUEST,
+            lastId,
           });
         }
       }
@@ -46,7 +54,7 @@ const Home = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
-  }, [hasMorePost, loadPostLoading]);
+  }, [hasMorePost, loadPostLoading, mainPosts]);
 
   return (
     <AppLayout>
