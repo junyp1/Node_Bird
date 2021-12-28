@@ -13,6 +13,12 @@ export const initialState = {
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
+  loadUserPostsLoading: false,
+  loadUserPostsDone: false,
+  loadUserPostsError: null,
+  loadHashtagPostsLoading: false,
+  loadHashtagPostsDone: false,
+  loadHashtagPostsError: null,
   loadPostOneLoading: false,
   loadPostOneDone: false,
   loadPostOneError: null,
@@ -51,6 +57,14 @@ export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
+
+export const LOAD_USER_POSTS_REQUEST = "LOAD_USER_POSTS_REQUEST";
+export const LOAD_USER_POSTS_SUCCESS = "LOAD_USER_POSTS_SUCCESS";
+export const LOAD_USER_POSTS_FAILURE = "LOAD_USER_POSTS_FAILURE";
+
+export const LOAD_HASHTAG_POSTS_REQUEST = "LOAD_HASHTAG_POSTS_REQUEST";
+export const LOAD_HASHTAG_POSTS_SUCCESS = "LOAD_HASHTAG_POSTS_SUCCESS";
+export const LOAD_HASHTAG_POSTS_FAILURE = "LOAD_HASHTAG_POSTS_FAILURE";
 
 export const LOAD_POST_ONE_REQUEST = "LOAD_POST_ONE_REQUEST";
 export const LOAD_POST_ONE_SUCCESS = "LOAD_POST_ONE_SUCCESS";
@@ -164,6 +178,36 @@ const reducer = (state = initialState, action) =>
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;
         draft.loadPostError = action.error;
+        break;
+      case LOAD_USER_POSTS_REQUEST:
+        draft.loadUserPostsLoading = true;
+        draft.loadUserPostsDone = false;
+        draft.loadUserPostsError = null;
+        break;
+      case LOAD_USER_POSTS_SUCCESS:
+        draft.loadUserPostsLoading = false;
+        draft.loadUserPostsDone = true;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePost = action.data.length === 10;
+        break;
+      case LOAD_USER_POSTS_FAILURE:
+        draft.loadUserPostsLoading = false;
+        draft.loadUserPostsError = action.error;
+        break;
+      case LOAD_HASHTAG_POSTS_REQUEST:
+        draft.loadHashtagPostsLoading = true;
+        draft.loadHashtagPostsDone = false;
+        draft.loadHashtagPostsError = null;
+        break;
+      case LOAD_HASHTAG_POSTS_SUCCESS:
+        draft.loadHashtagPostsLoading = false;
+        draft.loadHashtagPostsDone = true;
+        draft.mainPosts = draft.mainPosts.concat(action.data);
+        draft.hasMorePost = action.data.length === 10;
+        break;
+      case LOAD_HASHTAG_POSTS_FAILURE:
+        draft.loadHashtagPostsLoading = false;
+        draft.loadHashtagPostsError = action.error;
         break;
       case LOAD_POST_ONE_REQUEST:
         draft.loadPostOneLoading = true;
