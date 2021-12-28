@@ -17,6 +17,9 @@ import {
   LOAD_POST_REQUEST,
   LOAD_POST_SUCCESS,
   LOAD_POST_FAILURE,
+  LOAD_POST_ONE_REQUEST,
+  LOAD_POST_ONE_SUCCESS,
+  LOAD_POST_ONE_FAILURE,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_REQUEST,
   LIKE_POST_REQUEST,
@@ -120,6 +123,24 @@ function* loadPost(action) {
   }
 }
 
+function loadPostOneAPI(data) {
+  return axios.get(`/post/${data}`);
+}
+
+function* loadPostOne(action) {
+  try {
+    const result = yield call(loadPostOneAPI, action.data);
+    yield put({
+      type: LOAD_POST_ONE_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_POST_ONE_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
 function removePostAPI(data) {
   return axios.delete(`/post/${data}`);
 }
@@ -220,6 +241,10 @@ function* watchLoadPost() {
   yield throttle(5000, LOAD_POST_REQUEST, loadPost);
 }
 
+function* watchLoadPostOne() {
+  yield takeLatest(LOAD_POST_ONE_REQUEST, loadPostOne);
+}
+
 function* watchRemovePost() {
   yield takeLatest(REMOVE_POST_REQUEST, removePost);
 }
@@ -246,5 +271,6 @@ export default function* postSaga() {
     fork(watchUnlikePost),
     fork(watchUploadImages),
     fork(watchRetweet),
+    fork(watchLoadPostOne),
   ]);
 }

@@ -13,6 +13,9 @@ export const initialState = {
   loadPostLoading: false,
   loadPostDone: false,
   loadPostError: null,
+  loadPostOneLoading: false,
+  loadPostOneDone: false,
+  loadPostOneError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -28,6 +31,7 @@ export const initialState = {
   retweetLoading: false,
   retweetDone: false,
   retweetError: null,
+  singlePost: null,
 };
 
 export const REMOVE_IMAGE = "REMOVE_IMAGE";
@@ -47,6 +51,10 @@ export const UNLIKE_POST_FAILURE = "UNLIKE_POST_FAILURE";
 export const LOAD_POST_REQUEST = "LOAD_POST_REQUEST";
 export const LOAD_POST_SUCCESS = "LOAD_POST_SUCCESS";
 export const LOAD_POST_FAILURE = "LOAD_POST_FAILURE";
+
+export const LOAD_POST_ONE_REQUEST = "LOAD_POST_ONE_REQUEST";
+export const LOAD_POST_ONE_SUCCESS = "LOAD_POST_ONE_SUCCESS";
+export const LOAD_POST_ONE_FAILURE = "LOAD_POST_ONE_FAILURE";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -156,6 +164,20 @@ const reducer = (state = initialState, action) =>
       case LOAD_POST_FAILURE:
         draft.loadPostLoading = false;
         draft.loadPostError = action.error;
+        break;
+      case LOAD_POST_ONE_REQUEST:
+        draft.loadPostOneLoading = true;
+        draft.loadPostOneDone = false;
+        draft.loadPostOneError = null;
+        break;
+      case LOAD_POST_ONE_SUCCESS:
+        draft.loadPostOneLoading = false;
+        draft.loadPostOneDone = true;
+        draft.singlePost = action.data;
+        break;
+      case LOAD_POST_ONE_FAILURE:
+        draft.loadPostOneLoading = false;
+        draft.loadPostOneError = action.error;
         break;
       case ADD_POST_REQUEST:
         draft.addPostLoading = true;
