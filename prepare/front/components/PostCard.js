@@ -18,6 +18,7 @@ import {
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
   RETWEET_REQUEST,
+  UPDATE_POST_REQUEST,
 } from "../reducers/post";
 import FollowButton from "./FollowButton";
 import Link from "next/link";
@@ -30,8 +31,29 @@ const PostCard = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id);
   const { removePostLoading } = useSelector((state) => state.post);
   const [commentFormOpened, setCommendOpened] = useState(false);
-
+  const [editMode, setEditMode] = useState(false);
   const liked = post.Likers.find((v) => v.id === id);
+
+  const onClickUpdate = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
+  const onCancelUpdate = useCallback(() => {
+    setEditMode(false);
+  }, []);
+
+  const onChangePost = useCallback(
+    (editText) => () => {
+      dispatch({
+        type: UPDATE_POST_REQUEST,
+        data: {
+          PostId: post.id,
+          content: editText,
+        },
+      });
+    },
+    [post]
+  );
 
   const onLike = useCallback(() => {
     if (!id) {
@@ -105,7 +127,9 @@ const PostCard = ({ post }) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    {!post.RetweetId && <Button>수정</Button>}
+                    {!post.RetweetId && (
+                      <Button onClick={onClickUpdate}>수정</Button>
+                    )}
                     <Button
                       type="danger"
                       onClick={onRemovePost}
@@ -148,6 +172,8 @@ const PostCard = ({ post }) => {
               description={
                 <PostCardContent
                   postData={post.Retweet.content}
+                  onCancelUpdate={onCancelUpdate}
+                  onChangePost={onChangePost}
                 ></PostCardContent>
               }
             ></Card.Meta>
@@ -167,7 +193,12 @@ const PostCard = ({ post }) => {
               }
               title={post.User.nickname}
               description={
-                <PostCardContent postData={post.content}></PostCardContent>
+                <PostCardContent
+                  editMode={editMode}
+                  postData={post.content}
+                  onCancelUpdate={onCancelUpdate}
+                  onChangePost={onChangePost}
+                ></PostCardContent>
               }
             ></Card.Meta>
           </>

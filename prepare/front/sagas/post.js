@@ -40,6 +40,9 @@ import {
   LOAD_HASHTAG_POSTS_REQUEST,
   LOAD_HASHTAG_POSTS_SUCCESS,
   LOAD_HASHTAG_POSTS_FAILURE,
+  UPDATE_POST_REQUEST,
+  UPDATE_POST_SUCCESS,
+  UPDATE_POST_FAILURE,
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import axios from "axios";
@@ -188,6 +191,7 @@ function* loadPostOne(action) {
     });
   }
 }
+
 function removePostAPI(data) {
   return axios.delete(`/post/${data}`);
 }
@@ -195,7 +199,6 @@ function removePostAPI(data) {
 function* removePost(action) {
   try {
     const result = yield call(removePostAPI, action.data);
-    yield delay(1000);
     yield put({
       type: REMOVE_POST_SUCCESS,
       data: result.data,
@@ -212,6 +215,24 @@ function* removePost(action) {
   }
 }
 
+function updatePostAPI(data) {
+  return axios.patch(`/post/${data.PostId}`, data);
+}
+
+function* updatePost(action) {
+  try {
+    const result = yield call(updatePostAPI, action.data);
+    yield put({
+      type: UPDATE_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: UPDATE_POST_FAILURE,
+      data: err.response.data,
+    });
+  }
+}
 function addCommentAPI(data) {
   return axios.post(`/post/${data.postId}/comment`, data); // POST /post/1/comment
 }
@@ -316,6 +337,10 @@ function* watchLoadHashtagPosts() {
   yield throttle(5000, LOAD_HASHTAG_POSTS_REQUEST, loadHashtagPosts);
 }
 
+function* watchUpdatePost() {
+  yield takeLatest(UPDATE_POST_REQUEST, updatePost);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchAddPost),
@@ -329,5 +354,6 @@ export default function* postSaga() {
     fork(watchLoadPostOne),
     fork(watchLoadUserPosts),
     fork(watchLoadHashtagPosts),
+    fork(watchUpdatePost),
   ]);
 }
