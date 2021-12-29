@@ -105,7 +105,7 @@ const PostCard = ({ post }) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    <Button>수정</Button>
+                    {!post.RetweetId && <Button>수정</Button>}
                     <Button
                       type="danger"
                       onClick={onRemovePost}
@@ -140,11 +140,11 @@ const PostCard = ({ post }) => {
               avatar={
                 <Link href={`/user/${post.Retweet.User.id}`}>
                   <a>
-                    <Avatar>{post.User.nickname[0]}</Avatar>
+                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
                   </a>
                 </Link>
               }
-              title={post.User.nickname}
+              title={post.Retweet.User.nickname}
               description={
                 <PostCardContent
                   postData={post.Retweet.content}

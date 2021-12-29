@@ -1,5 +1,5 @@
 import axios from "axios";
-import produce from "immer";
+import produce from "../util/produce";
 
 export const initialState = {
   loadFollowersLoading: false,
